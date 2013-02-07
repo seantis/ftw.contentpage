@@ -18,7 +18,8 @@ class TextBlockView(BrowserView):
 
     def get_css_klass(self):
         layout = self.image_layout
-        return 'sl-img-' + layout
+        if layout:
+            return 'sl-img-' + layout
 
     def has_image(self):
         return bool(self.context.getImage())
