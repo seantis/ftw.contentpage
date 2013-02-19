@@ -161,11 +161,11 @@ class AddressBlock(ATCTContent, HistoryAwareMixin):
         """
         registry = getUtility(IRegistry)
         return registry.get('ftw.contentpage.addressblock.defaultcountry',
-                            'Switzerland')
+                            '')
 
     security.declarePrivate('getDefaultTitle')
     def getDefaultTitle(self):
-        return translate(_(u'label_default_address',
-                 default=u'Address'))
+        registry = getUtility(IRegistry)
+        return registry.get('ftw.contentpage.addressblock.defaulttitle', '')
 
 atapi.registerType(AddressBlock, config.PROJECTNAME)
