@@ -19,6 +19,7 @@ news_schema['effectiveDate'].required = True
 news_schema['effectiveDate'].default_method = 'getDefaultEffectiveDate'
 news_schema.changeSchemataForField('effectiveDate', 'default')
 news_schema.changeSchemataForField('expirationDate', 'default')
+news_schema.moveField('image', after='description')
 
 
 class News(folder.ATFolder):
@@ -30,6 +31,10 @@ class News(folder.ATFolder):
 
     def getDefaultEffectiveDate(self):
         return DateTime().Date()
+
+    security.declarePublic('showAddMenu')
+    def showAddMenu(self):
+        return False
 
     security.declarePublic('show_description')
     def show_description(self):
