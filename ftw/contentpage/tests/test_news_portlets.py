@@ -26,7 +26,7 @@ class TestNewsPortlet(MockTestCase):
         self.replay()
         obj = Assignment(path=['/peter/hans'])
         renderer = Renderer(context, request, view, manager, obj)
-        renderer.get_news()
+        renderer.get_items()
 
     def test_path(self):
 
@@ -50,7 +50,7 @@ class TestNewsPortlet(MockTestCase):
         self.replay()
         obj = Assignment(path=['peter/hans'], only_context=False)
         renderer = Renderer(context, request, view, manager, obj)
-        renderer.get_news()
+        renderer.get_items()
 
     def test_subject(self):
 
@@ -74,7 +74,7 @@ class TestNewsPortlet(MockTestCase):
         self.replay()
         obj = Assignment(subjects=['hans', 'peter'], only_context=False)
         renderer = Renderer(context, request, view, manager, obj)
-        renderer.get_news()
+        renderer.get_items()
 
     def test_ClassificationItem(self):
 
@@ -103,4 +103,4 @@ class TestNewsPortlet(MockTestCase):
         obj = Assignment(classification_items=['hans/peter'],
                          only_context=False)
         renderer = Renderer(context, request, view, manager, obj)
-        renderer.get_news()
+        renderer.get_items()

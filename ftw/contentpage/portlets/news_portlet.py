@@ -202,13 +202,13 @@ class Renderer(base.Renderer):
     @property
     def available(self):
         is_news = self.context.portal_type in ['News', 'NewsFolder']
-        return bool(self.get_news() and not is_news)
+        return bool(self.get_items() and not is_news)
 
-    def get_news(self):
+    def get_items(self, portal_type="News", date_field="effective", sort_order="descending"):
         catalog = getToolByName(self.context, 'portal_catalog')
         url_tool = getToolByName(self.context, 'portal_url')
         portal_path = url_tool.getPortalPath()
-        query = {'portal_type': 'News'}
+        query = {'portal_type': portal_type}
 
         if self.data.only_context:
             path = '/'.join(self.context.getPhysicalPath())
@@ -234,12 +234,16 @@ class Renderer(base.Renderer):
 
         if self.data.days > 0:
             date = DateTime() - self.data.days
-            query['effective'] = {'query': date, 'range': 'min'}
+            query[date_field] = {'query': date, 'range': 'min'}
 
-        query['sort_on'] = 'effective'
-        query['sort_order'] = 'descending'
+        query['sort_on'] = date_field
+        query['sort_order'] = sort_order
+        query = self.extend_query(query)
         results = catalog.searchResults(query)
-        return results[0:self.data.quantity - 1]
+        return results[:self.data.quantity]
+
+    def extend_query(self, query):
+        return query
 
     def crop_desc(self, description):
         ploneview = self.context.restrictedTraverse('@@plone')

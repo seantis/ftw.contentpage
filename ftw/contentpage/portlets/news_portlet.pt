@@ -5,7 +5,7 @@
 
     <dt class="portletHeader" tal:content="view/data/portlet_title">
     </dt>
-    <tal:loop tal:repeat="brain view/get_news">
+    <tal:loop tal:repeat="brain view/get_items">
         <dd class="portletItem"
             tal:define="oddrow repeat/brain/odd;
                         lastrow repeat/brain/_last"

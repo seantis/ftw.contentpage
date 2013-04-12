@@ -301,7 +301,7 @@ class TestNewsPortlets(unittest.TestCase):
         manager = getUtility(IPortletManager, name=u"plone.leftcolumn")
         renderer = NewsRenderer(context, context.REQUEST, BrowserView,
                                 manager, portlet)
-        self.assertEquals(len(renderer.get_news()), 4, 'Expect all 4 news')
+        self.assertEquals(len(renderer.get_items()), 4, 'Expect all 4 news')
 
     def test_days_filter(self):
         context = self.portal
@@ -310,12 +310,12 @@ class TestNewsPortlets(unittest.TestCase):
         renderer = NewsRenderer(context, context.REQUEST, BrowserView,
                                 manager, portlet)
 
-        self.assertEquals(len(renderer.get_news()), 2, 'Expect 2 news')
+        self.assertEquals(len(renderer.get_items()), 2, 'Expect 2 news')
 
         portlet = NewsAssignment(days=28, only_context=False)
         renderer = NewsRenderer(context, context.REQUEST, BrowserView,
                                 manager, portlet)
-        self.assertEquals(len(renderer.get_news()), 3, 'Expect 3 news')
+        self.assertEquals(len(renderer.get_items()), 3, 'Expect 3 news')
 
     def test_archive_portlet_empty(self):
         # Separate test for the archive portlet, because we need static dates
