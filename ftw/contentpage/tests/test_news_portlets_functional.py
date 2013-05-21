@@ -1,8 +1,9 @@
 from DateTime import DateTime
-from ftw.contentpage.portlets.news_portlet import Assignment as NewsAssignment
-from ftw.contentpage.portlets.news_portlet import Renderer as NewsRenderer
+from ftw.contentpage.browser.newslisting import NewsListing
 from ftw.contentpage.portlets.news_archive_portlet import Assignment
 from ftw.contentpage.portlets.news_archive_portlet import Renderer
+from ftw.contentpage.portlets.news_portlet import Assignment as NewsAssignment
+from ftw.contentpage.portlets.news_portlet import Renderer as NewsRenderer
 from ftw.contentpage.testing import FTW_CONTENTPAGE_FUNCTIONAL_TESTING
 from plone.app.testing import TEST_USER_NAME, TEST_USER_PASSWORD
 from plone.portlets.interfaces import IPortletManager
@@ -10,6 +11,7 @@ from plone.testing.z2 import Browser
 from Products.CMFCore.TypesTool import FactoryTypeInformation
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
+from pyquery import PyQuery
 from zope.component import getUtility
 import os
 import transaction
@@ -324,7 +326,8 @@ class TestNewsPortlets(unittest.TestCase):
 
         manager = getUtility(IPortletManager, name=u"plone.leftcolumn")
         portlet = Assignment()
-        renderer = Renderer(archivefolder, archivefolder.REQUEST, object(),
+        view = NewsListing(archivefolder, archivefolder.REQUEST)
+        renderer = Renderer(archivefolder, archivefolder.REQUEST, view,
                             manager, portlet)
 
         self.assertFalse(renderer.available,
@@ -345,9 +348,12 @@ class TestNewsPortlets(unittest.TestCase):
             'News', 'news3', effectiveDate=DateTime('2012/12/20'))
         archivefolder.invokeFactory(
             'News', 'news4', effectiveDate=DateTime('2012/12/21'))
+        archivefolder.invokeFactory(
+            'News', 'news5', effectiveDate=None)
 
         portlet = Assignment()
-        renderer = Renderer(archivefolder, archivefolder.REQUEST, object(),
+        view = NewsListing(archivefolder, archivefolder.REQUEST)
+        renderer = Renderer(archivefolder, archivefolder.REQUEST, view,
                             manager, portlet)
 
         self.assertTrue(renderer.available,
@@ -355,11 +361,59 @@ class TestNewsPortlets(unittest.TestCase):
 
         self.assertEquals(
             renderer.archive_summary(),
-            [{'url': 'http://nohost/plone/archivefolder?archiv=2013/01/01',
+            [{'url': 'http://nohost/plone/archivefolder/news_listing?'
+              'archiv=2013/01/01',
               'number': 2,
               'mark': False,
               'title': u'January 2013'},
-             {'url': 'http://nohost/plone/archivefolder?archiv=2012/12/01',
+             {'url': 'http://nohost/plone/archivefolder/news_listing'
+              '?archiv=2012/12/01',
               'number': 2,
               'mark': False,
               'title': u'December 2012'}])
+
+    def test_archive_portlets_is_available_on_newslisting(self):
+        manager = getUtility(IPortletManager, name=u"plone.leftcolumn")
+        portlet = Assignment()
+        view = NewsListing(self.portal, self.portal.REQUEST)
+        renderer = Renderer(self.portal, self.portal.REQUEST, view,
+                            manager, portlet)
+
+        self.assertTrue(renderer.available,
+            'News Archive portlet should be available on NewsListing View')
+
+    def test_news_archive_portlet(self):
+        self.browser.addHeader('Authorization', 'Basic %s:%s' % (
+            TEST_USER_NAME, TEST_USER_PASSWORD, ))
+
+        self.browser.open(
+            '%s/++contextportlets++plone.leftcolumn/+/newsarchiveportlet' %
+            self.newsfolder1.absolute_url())
+
+        self.browser.open(self.newsfolder1.absolute_url())
+
+        pq = PyQuery(self.browser.contents)
+        self.assertTrue(pq('.portlet.portletArchiveNews'),
+            'We added one, so there sould be a EventArchive portlet')
+
+        self.assertGreater(
+            len(pq('.portlet.portletArchiveNews .portletItem li')), 0,
+            'Expect at least one entry in the events archive portlet')
+
+    def test_newsportlet_more_news_link_disabled(self):
+        manager = getUtility(IPortletManager, name=u"plone.leftcolumn")
+        portlet = NewsAssignment()
+        renderer = NewsRenderer(self.portal, self.portal.REQUEST, object(),
+                            manager, portlet)
+
+        self.assertFalse(renderer.show_more_news_link(),
+            'Expect that the "More News" link is invisible')
+
+    def test_newsportlet_more_news_link_enabled(self):
+        manager = getUtility(IPortletManager, name=u"plone.leftcolumn")
+        portlet = NewsAssignment(more_news_link=True)
+        renderer = NewsRenderer(self.portal, self.portal.REQUEST, object(),
+                            manager, portlet)
+
+        self.assertTrue(renderer.show_more_news_link(),
+            'Expect that the "More News" link is visible')

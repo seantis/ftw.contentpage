@@ -1,23 +1,24 @@
-from ftw.contentpage.content.contentpage import ContentPage
-from ftw.contentpage.content.contentpage import ContentPageSchema
-from Products.Archetypes import atapi
-from Products.ATContentTypes.content.schemata import finalizeATCTSchema
+from AccessControl import ClassSecurityInfo
 from ftw.calendarwidget.browser.widgets import FtwCalendarWidget
 from ftw.contentpage import _
-from zope.interface import implements
-from AccessControl import ClassSecurityInfo
-from ftw.contentpage.interfaces import IEventPage
 from ftw.contentpage.config import PROJECTNAME
-from Products.ATContentTypes.utils import DT2dt
+from ftw.contentpage.content.contentpage import ContentPage
+from ftw.contentpage.content.contentpage import ContentPageSchema
 from ftw.contentpage.content.textblock import image_schema
+from ftw.contentpage.interfaces import IEventPage
+from Products.Archetypes import atapi
 from Products.ATContentTypes.config import HAS_LINGUA_PLONE
+from Products.ATContentTypes.content.schemata import finalizeATCTSchema
+from zope.interface import implements
+
+
 if HAS_LINGUA_PLONE:
     from Products.LinguaPlone.public import registerType
 else:
     from Products.Archetypes.atapi import registerType
 
 
-EventSchema = ContentPageSchema.copy() + image_schema.copy() + atapi.Schema((
+EventSchema = ContentPageSchema.copy() + atapi.Schema((
     atapi.DateTimeField(
         'startDate',
         required=True,
@@ -25,6 +26,7 @@ EventSchema = ContentPageSchema.copy() + image_schema.copy() + atapi.Schema((
         accessor='start',
         languageIndependent=True,
         widget=FtwCalendarWidget(
+            helper_js=('++resource++ftw.contentpage.resources/start_end_date_helper.js',),
             label=_(u'label_event_start', default=u'Event Starts'),
             description=_(u'help_start',
                           default=u"Date and Time, when the event begins."),
@@ -67,6 +69,11 @@ finalizeATCTSchema(EventSchema)
 # finalizeATCTSchema moves 'location' into 'categories', we move it back:
 EventSchema.changeSchemataForField('location', 'default')
 
+# Protect the teaser image with a specific permission
+permission = "ftw.contentpage: Edit teaser image on EventPage"
+for name in image_schema.keys():
+    EventSchema[name].write_permission = permission
+
 
 class EventPage(ContentPage):
     implements(IEventPage)
@@ -74,23 +81,6 @@ class EventPage(ContentPage):
     meta_type = "EventPage"
     schema = EventSchema
     security = ClassSecurityInfo()
-
-    def getDate(self):
-        start = DT2dt(self.start())
-        start_date = start.date().strftime('%d.%m.%Y')
-        if not self.getWholeDay():
-            start_time = start.time().strftime('%H:%M')
-            end = DT2dt(self.end())
-            end_date = end.date().strftime('%d.%m.%Y')
-            end_time = end.time().strftime('%H:%M')
-            # XXX not readable us %(dict)s
-            if start_date == end_date:
-                return start_date + ' ' + start_time + ' - ' + end_time
-            else:
-                return start_date + ' ' + start_time + ' -\
- ' + end_date + ' ' + end_time
-        else:
-            return start_date
 
     security.declarePublic('show_description')
     def show_description(self):

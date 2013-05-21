@@ -44,9 +44,25 @@
 }
 /* @end */
 
+/* @group news block */
+
+.newsPublicationDate {
+  color: #666666;
+  font-size: 85%;
+  margin-bottom: 1em;
+}
+
+/* @end */
 
 /* @group archive portlet */
-.portletArchiveNews .highlight a {
+.portletArchiveNews .highlight a,
+.portletArchiveEventPage .highlight a {
   font-weight: bold;
+}
+/* @end */
+
+/* @group Teaser image */
+#content .sl-teaser-content-listing .sl-controls .sl-obj-actions > li.document-action-dragme {
+  display: none;
 }
 /* @end */

@@ -74,29 +74,29 @@
         for="*"
         name="news_listing"
         class=".newslisting.NewsListing"
-        permission="zope.Public"
+        permission="zope2.View"
         />
 
     <browser:page
         for="*"
         name="event_listing"
         class=".eventlisting.EventListing"
-        permission="zope.Public"
+        permission="zope2.View"
         />
 
     <browser:page
         for="*"
         name="news_rss_listing"
         class=".newslisting.NewsListing"
-        permission="zope.Public"
+        permission="zope2.View"
         allowed_attributes="news_result get_news"
         />
 
     <browser:page
-        for="ftw.contentpage.interfaces.INews"
+        for="ftw.contentpage.interfaces.ITeaser"
         name="block_view"
-        template="news_block_view.pt"
-        class=".news_block_view.NewsBlockView"
+        template="teaser_block_view.pt"
+        class=".teaser_block_view.NewsBlockView"
         permission="zope2.View" />
 
 

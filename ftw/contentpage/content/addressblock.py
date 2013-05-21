@@ -119,7 +119,7 @@ schema = atapi.Schema((
         name='openingHours',
         schemata='default',
         default_output_type='text/html',
-        allowable_content_types=('text/html',),
+        allowable_content_types=('text/plain',),
         widget=atapi.TextAreaWidget(
             label=_(u'label_openingHours',
                     default=u'Opening Hours'),
@@ -130,7 +130,7 @@ schema = atapi.Schema((
         name='directions',
         schemata='default',
         default_output_type='text/html',
-        allowable_content_types=('text/html',),
+        allowable_content_types=('text/plain',),
         widget=atapi.TextAreaWidget(
             label=_(u'label_directions',
                     default=u'Directions'),
@@ -165,7 +165,6 @@ class AddressBlock(ATCTContent, HistoryAwareMixin):
                             ''),
             domain='ftw.contentpage',
             context=self.REQUEST)
-
 
     security.declarePrivate('getDefaultTitle')
     def getDefaultTitle(self):

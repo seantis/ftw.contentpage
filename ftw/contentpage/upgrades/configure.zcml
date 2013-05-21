@@ -60,6 +60,7 @@
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
 
+    <!-- 1003 -> 1004 -->
     <genericsetup:upgradeStep
         title="Add Event type"
         description=""
@@ -78,6 +79,7 @@
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
 
+    <!-- 1004 -> 1005 -->
     <genericsetup:upgradeStep
         title="Add Rolemap entrys"
         description=""
@@ -92,6 +94,82 @@
         title="ftw.contentpage.upgrades.1005"
         description=""
         directory="profiles/1005"
+        for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+    <!-- 1005 -> 1006 -->
+    <genericsetup:upgradeStep
+        title="Update rolemap by teaser edit permissions / Update types actions / Update factorytool"
+        description=""
+        source="1005"
+        destination="1006"
+        handler="ftw.contentpage.upgrades.to1006.UpdateRolemapAndFactoryTool"
+        profile="ftw.contentpage:default"
+        />
+
+    <genericsetup:registerProfile
+        name="1006"
+        title="ftw.contentpage.upgrades.1006"
+        description=""
+        directory="profiles/1006"
+        for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+    <!-- 1006 -> 1007 -->
+    <genericsetup:upgradeStep
+        title="Fix AddressBlock FTI - Change (Default) alias"
+        description=""
+        source="1006"
+        destination="1007"
+        handler="ftw.contentpage.upgrades.to1007.UpdateAddressBlockFTI"
+        profile="ftw.contentpage:default"
+        />
+
+    <genericsetup:registerProfile
+        name="1007"
+        title="ftw.contentpage.upgrades.1007"
+        description=""
+        directory="profiles/1007"
+        for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+    <!-- 1007 -> 1008 -->
+    <genericsetup:upgradeStep
+        title="Remove Workflow from TextBlock, ListingBlock, AddressBlock"
+        description=""
+        source="1007"
+        destination="1008"
+        handler="ftw.contentpage.upgrades.to1008.RemoveWorkflowFromBlocks"
+        profile="ftw.contentpage:default"
+        />
+
+    <genericsetup:registerProfile
+        name="1008"
+        title="ftw.contentpage.upgrades.1008"
+        description=""
+        directory="profiles/1008"
+        for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+    <!-- 1008 -> 1009 -->
+    <genericsetup:upgradeStep
+        title="Add ListingBlock/AddressBlock to addable types of News"
+        description=""
+        source="1008"
+        destination="1009"
+        handler="ftw.contentpage.upgrades.to1009.UpdateNewsAddableTypes"
+        profile="ftw.contentpage:default"
+        />
+
+    <genericsetup:registerProfile
+        name="1009"
+        title="ftw.contentpage.upgrades.1009"
+        description=""
+        directory="profiles/1009"
         for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />

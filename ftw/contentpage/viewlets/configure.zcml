@@ -12,10 +12,10 @@
         />
 
     <browser:viewlet
-        for="ftw.contentpage.interfaces.INews"
-        name="simplelayout.news.listing.body"
+        for="ftw.contentpage.interfaces.ITeaser"
+        name="simplelayout.teaser.listing.body"
         manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
-        class=".simplelayout_news_listing_viewlet.SimpleLayoutNewsListingViewlet"
+        class=".teaser_listing_viewlet.SimpleLayoutNewsListingViewlet"
         permission="zope2.View"
         />
 
@@ -25,6 +25,14 @@
         name="plone.belowcontenttitle.documentbyline"
         manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
         class=".byline.NewsByline"
+        permission="zope2.View"
+        />
+
+    <browser:viewlet
+        for="ftw.contentpage.interfaces.INews"
+        name="ftw.contentpage.news_date"
+        manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
+        class=".news.NewsDate"
         permission="zope2.View"
         />
 
