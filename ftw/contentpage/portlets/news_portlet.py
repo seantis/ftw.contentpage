@@ -43,9 +43,9 @@ class Renderer(base_portlet.Renderer):
     def available(self):
         is_news = self.context.portal_type in ['News', 'NewsFolder']
         if self.show_more_news_link():
-            has_news = self.get_news(all_news=True)
+            has_news = self.get_items(all_items=True)
         else:
-            has_news = self.get_news()
+            has_news = self.get_items()
         return has_news and not is_news
 
     def get_items(self, all_items=False):
