@@ -4,6 +4,9 @@ Changelog
 1.3 (unreleased)
 ----------------
 
+- Updated translations for url field in addressblock.
+  [Julian Infanger]
+
 - Added simplelayout summary view to display more details in contentlisting.
   [Julian Infanger]
 
